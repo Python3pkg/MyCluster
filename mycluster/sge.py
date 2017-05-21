@@ -2,8 +2,8 @@ import os
 import re
 import math
 from string import Template
-from mycluster import get_data
-from mycluster import load_template
+from .mycluster import get_data
+from .mycluster import load_template
 
 """"
 SGE notes
@@ -307,8 +307,8 @@ def submit(script_name, immediate, depends=None):
         try:
             job_id = int(f.readline().strip())
         except:
-            print 'job id not returned'
-            print f.readline()
+            print('job id not returned')
+            print(f.readline())
             pass
         # Get job id and record in database
     return job_id
@@ -330,7 +330,7 @@ def status():
 
                 status_dict[job_id] = state
         except e:
-            print e
+            print(e)
 
     return status_dict
 
@@ -346,7 +346,7 @@ def job_stats(job_id):
         except:
             pass
     import datetime
-    from mycluster import print_timedelta
+    from .mycluster import print_timedelta
     stats_dict['wallclock'] = datetime.timedelta(seconds=int(output['ru_wallclock']))
     stats_dict['mem'] = output['mem']
     stats_dict['cpu'] = datetime.timedelta(seconds=int(output['cpu'].split('.')[0]))

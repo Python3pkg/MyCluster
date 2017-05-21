@@ -4,10 +4,10 @@ import re
 import math
 from string import Template
 # from datetime import timedelta
-from mycluster import get_timedelta
+from .mycluster import get_timedelta
 # from subprocess import Popen, PIPE, check_output
-from mycluster import get_data
-from mycluster import load_template
+from .mycluster import get_data
+from .mycluster import load_template
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -92,7 +92,7 @@ def node_config(queue_id):
             config['max thread'] = tasks
             config['max memory'] = memory
         else:
-            raise StandardError("Requested partition %s has no nodes" % queue_name)
+            raise Exception("Requested partition %s has no nodes" % queue_name)
 
     return config
 
@@ -172,21 +172,21 @@ def submit(script_name, immediate, depends_on = None, depends_on_always_run = Fa
                 try:
                     job_id = int(output.split(' ')[-1].strip())
                 except:
-                    print 'Job submission failed: '+output   
+                    print('Job submission failed: '+output)   
         elif depends_on is not None:
             with os.popen('sbatch --kill-on-invalid-dep=yes --dependency=afterok:%s %s' % (depends_on, script_name)) as f:
                 output = f.readline()
                 try:
                     job_id = int(output.split(' ')[-1].strip())
                 except:
-                    print 'Job submission failed: '+output   
+                    print('Job submission failed: '+output)   
         else:
             with os.popen('sbatch '+script_name) as f:
                 output = f.readline()
                 try:
                     job_id = int(output.split(' ')[-1].strip())
                 except:
-                    print 'Job submission failed: '+output
+                    print('Job submission failed: '+output)
                 # Get job id and record in database
     else:
         with os.popen('grep -- "SBATCH -p" ' + script_name
@@ -202,7 +202,7 @@ def submit(script_name, immediate, depends_on = None, depends_on_always_run = Fa
             job = f.readline().rstrip()
 
         cmd_line = 'salloc --exclusive '+nnodes+' '+partition+' '+ntasks+' '+project+' '+job+' bash ./'+script_name
-        print cmd_line
+        print(cmd_line)
 
         import subprocess
         try:
@@ -210,9 +210,9 @@ def submit(script_name, immediate, depends_on = None, depends_on_always_run = Fa
             try:
                 job_id = int(output.split(' ')[-1].strip())
             except:
-                print('Job submission failed: ' + output)
+                print(('Job submission failed: ' + output))
         except:
-            print('Job submission failed: ' + cmd_line)
+            print(('Job submission failed: ' + cmd_line))
 
     return job_id
 
@@ -236,7 +236,7 @@ def status():
                 else:
                     status_dict[job_id] = state
         except Exception as e:
-            print e
+            print(e)
 
     return status_dict
 
